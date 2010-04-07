@@ -18,7 +18,17 @@ class js{
 		if ( !isset($this->files[$sourceLocation]) ) {
 			$this->files[$sourceLocation] = array();
 		}
-		$this->files[$sourceLocation][$this->conf['js_base_url'].$file_url] = array($fileType, $includeType);
+		$xml = "<script><type>{$fileType}</type><href>{$this->conf['js_base_url']}{$file_url}</href></script>";
+		$this->parent->addXml($xml);
+		$this->parent->addXsl(
+		'<xsl:template match="script">
+<script>
+<xsl:attribute name="type"><xsl:value-of select="type"/></xsl:attribute>
+<xsl:attribute name="href"><xsl:value-of select="href"/></xsl:attribute>
+<![CDATA[]]>
+</script>
+</xsl:template>');
+		//$this->files[$sourceLocation][$this->conf['js_base_url'].$file_url] = array($fileType, $includeType);
 	}
 	
 	public function scripts($sourceLocation = false){
@@ -28,7 +38,8 @@ class js{
 		if ( !isset($this->files[$sourceLocation]) ) {
 			return false;
 		}
-		return $this->files[$sourceLocation];
+		//return $this->files[$sourceLocation];
+		//parent::->addXML();
 	}
 	
 	public function script_html($sourceLocation = false){
